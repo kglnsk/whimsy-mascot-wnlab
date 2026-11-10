@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research Directions — предложение по анимациям</title>
+<style>
+  :root { --ink:#22232b; --mut:#6b7080; --line:#e4e6ec; --bg:#fbfaf8; --acc:#D97757; --card:#fff; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 ui-rounded,"Nunito","Segoe UI",system-ui,-apple-system,sans-serif; }
+  a { color:inherit; }
+  header { background:#fff; border-bottom:1px solid var(--line); }
+  .hd { max-width:1080px; margin:0 auto; padding:14px 16px 0; }
+  .brand { display:flex; align-items:center; gap:12px; text-decoration:none; }
+  .logo { width:44px; height:44px; position:relative; flex:none; }
+  .logo i { position:absolute; background:var(--ink); border-radius:3px; }
+  .brand b { font-size:20px; line-height:1.15; } .brand small { display:block; color:var(--mut); font-weight:500; font-size:12px; }
+  .tag { margin-left:auto; font-size:12px; background:#FBE9E2; color:#9A4A2E; padding:4px 10px; border-radius:20px; white-space:nowrap; }
+  nav { display:flex; gap:4px; flex-wrap:wrap; margin-top:10px; }
+  nav span, nav a { padding:8px 12px; font-size:14px; color:var(--mut); text-decoration:none; border-bottom:3px solid transparent; }
+  nav a { color:var(--ink); font-weight:700; border-color:var(--acc); }
+  main { max-width:1080px; margin:0 auto; padding:20px 16px 60px; }
+  h1 { font-size:clamp(22px,3.4vw,32px); line-height:1.2; margin:8px 0 18px; text-wrap:balance; }
+  .crumbs { font-size:13px; color:var(--mut); } .crumbs a { color:var(--acc); text-decoration:none; }
+  canvas { display:block; width:100%; height:auto; aspect-ratio:960/420; border-radius:14px; background:#fff; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:20px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:10px 10px 14px; text-decoration:none; transition:transform .25s, box-shadow .25s; }
+  .card:hover { transform:translateY(-4px) rotate(-.4deg); box-shadow:0 14px 30px rgba(40,30,20,.10); }
+  .card-t { font-weight:800; font-size:19px; margin:12px 8px 0; } .card-s { color:var(--acc); font-size:13px; margin:2px 8px 0; font-weight:700; }
+  .player { background:#fff; border:1px solid var(--line); border-radius:18px; padding:10px; }
+  .player canvas { cursor:pointer; } .player.clean { padding:0; border:0; background:none; }
+  .pbar { display:flex; align-items:center; gap:10px; margin:10px 4px 0; }
+  .pbtn { width:34px; height:34px; border-radius:10px; border:1px solid var(--line); background:#fff; cursor:pointer; font-size:12px; color:var(--ink); flex:none; }
+  .track { position:relative; flex:1; height:8px; background:#eceef2; border-radius:4px; cursor:pointer; }
+  .fill { position:absolute; left:0; top:0; bottom:0; background:var(--acc); border-radius:4px; }
+  .tick { position:absolute; top:-3px; width:4px; height:14px; margin-left:-2px; background:var(--ink); border-radius:2px; opacity:.55; }
+  .cap { min-height:3em; margin:10px 6px 2px; font-size:clamp(15px,2vw,18px); font-weight:600; }
+  .cap b { display:inline-block; background:var(--ink); color:#fff; border-radius:8px; padding:0 8px; margin-right:8px; font-size:.8em; }
+  .cap.pop { animation:pop .45s ease; } @keyframes pop { from { opacity:0; transform:translateY(6px); } }
+  .subs { display:grid; gap:12px; margin-top:22px; }
+  .sub { display:flex; gap:16px; align-items:center; background:#fff; border:1px solid var(--line); border-radius:16px; padding:10px; text-decoration:none; transition:transform .2s, box-shadow .2s; }
+  .sub:hover { transform:translateX(4px); box-shadow:0 8px 20px rgba(40,30,20,.08); }
+  .sub canvas { width:220px; flex:none; border-radius:10px; }
+  .sub-t { font-weight:800; line-height:1.25; } .sub-d { color:var(--mut); font-size:14px; margin-top:4px; }
+  .lead { font-size:18px; max-width:760px; } .also, .ph { color:var(--mut); font-size:14px; } .also a { color:var(--acc); }
+  .pn { display:flex; justify-content:space-between; gap:12px; margin:18px 0; flex-wrap:wrap; } .pn a { text-decoration:none; font-weight:700; color:var(--acc); } .pn .next { margin-left:auto; }
+  .ph { border:1px dashed var(--line); border-radius:12px; padding:14px; }
+  footer { text-align:center; color:var(--mut); font-size:12px; padding:0 16px 30px; }
+  .sheet { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; } .sheet small { font-size:11px; }
+  body.qa header, body.qa footer { display:none; } body.qa main { max-width:none; padding:4px; }
+  @media (max-width:640px) { .sub { flex-direction:column; align-items:stretch; } .sub canvas { width:100%; } .tag { display:none; } }
+  @media (prefers-reduced-motion: reduce) { .card, .sub { transition:none; } .cap.pop { animation:none; } }
+</style>
+</head>
+<body>
+<header><div class="hd">
+  <a class="brand" href="#/">
+    <span class="logo"><i style="left:2px;top:6px;width:9px;height:9px"></i><i style="left:22px;top:2px;width:14px;height:14px"></i><i style="left:12px;top:22px;width:11px;height:11px"></i><i style="left:30px;top:28px;width:12px;height:12px"></i><i style="left:2px;top:36px;width:6px;height:6px"></i></span>
+    <b>Wireless Networks Lab<small>макет раздела с анимациями</small></b>
+    <span class="tag">прототип · кубики</span>
+  </a>
+  <nav><span>About</span><span>News</span><span>Team</span><a href="#/">Research Directions</a><span>Papers</span><span>Seminar</span><span>Workshop</span><span>Contact</span></nav>
+</div></header>
+<main id="app"></main>
+<footer>Предложение по анимациям для раздела Research Directions. Клик по сценке — пауза.</footer>
+<script>window.CLEAN = true;</script>
+<script src="js/engine.js"></script>
+<script src="js/scenes-directions.js"></script>
+<script src="js/scenes-wifi.js"></script>
+<script src="js/scenes-iot.js"></script>
+<script src="js/scenes-cellular.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
